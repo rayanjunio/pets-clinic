@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../db/connection");
 
-const Pet = require('./Pet');
+const Pet = require("./Pet");
 
 const Tutor = db.define("Tutor", {
   name: {
@@ -26,9 +26,7 @@ const Tutor = db.define("Tutor", {
   },
 });
 
-Tutor.hasMany(Pet);
+Tutor.hasMany(Pet, { onDelete: "CASCADE", hooks: true });
 Pet.belongsTo(Tutor);
 
 module.exports = Tutor;
-
-
