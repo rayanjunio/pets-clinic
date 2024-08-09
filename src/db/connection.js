@@ -1,18 +1,26 @@
+require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const mysql = require("mysql2/promise");
 
+const dbUser = process.env.DB_USER;
+const dbpassword = process.env.DB_PASSWORD;
+
 async function createDatabase() {
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-  });
-  await connection.query("CREATE DATABASE IF NOT EXISTS pets_clinic");
-  await connection.end();
+  try {
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      user: dbUser,
+      password: dbpassword,
+    });
+    connection.query("CREATE DATABASE IF NOT EXISTS pets_clinic");
+    connection.end();
+  } catch (err) {
+    console.log("Please, Verify your database connection");
+  }
 }
 createDatabase();
 
-const sequelize = new Sequelize("pets_clinic", "root", "", {
+const sequelize = new Sequelize("pets_clinic", dbUser, dbpassword, {
   host: "localhost",
   dialect: "mysql",
 });
