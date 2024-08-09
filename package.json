@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./src/index.js localhost 3000"
+    "start": "nodemon ./src/index.js localhost 3000",
+    "execute": "node ./src/db/connection.js && node ./src/index.js"
   },
   "repository": {
     "type": "git",
