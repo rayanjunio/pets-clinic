@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerDoc = require("../docs/swagger.json");
+
 const connection = require("./db/connection");
 
 const Tutor = require("./models/Tutor");
@@ -14,6 +17,8 @@ app.use(
 
 app.use(express.json());
 
+app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
 app.get("/tutors", async (req, res) => {
   const users = await Tutor.findAll({
     include: {
@@ -21,7 +26,6 @@ app.get("/tutors", async (req, res) => {
       attributes: ["id", "name", "species", "carry", "weight", "date_of_birth"],
     },
   });
-
   res.json(users);
 });
 
@@ -39,70 +43,85 @@ app.post("/tutor", async (req, res) => {
     date_of_birth,
     zip_code,
   });
-
   res.json(tutor);
+  return;
 });
 
 app.put("/tutor/:id", async (req, res) => {
   const id = req.params.id;
   const tutor = await Tutor.findByPk(id);
 
-  tutor.name = req.body.name;
-  tutor.phone = req.body.phone;
-  tutor.email = req.body.email;
-  tutor.date_of_birth = req.body.date_of_birth;
-  tutor.zip_code = req.body.zip_code;
+  if (tutor) {
+    tutor.name = req.body.name;
+    tutor.phone = req.body.phone;
+    tutor.email = req.body.email;
+    tutor.date_of_birth = req.body.date_of_birth;
+    tutor.zip_code = req.body.zip_code;
 
-  await tutor.save();
-  res.json(tutor);
+    if (await tutor.save()) {
+      res.json(tutor);
+      return;
+    }
+  }
+  res.status(400).send("Tutor ID doesn't exist!");
 });
 
 app.delete("/tutor/:id", async (req, res) => {
   const id = req.params.id;
   const tutor = await Tutor.findByPk(id);
 
-  await tutor.destroy();
-
-  res.sendStatus(204);
+  if (tutor) {
+    await tutor.destroy();
+    res.sendStatus(204);
+    return;
+  }
+  res.status(404).send("This ID doesn't exist!");
 });
 
 app.post("/pet/:tutorId", async (req, res) => {
   const TutorId = req.params.tutorId;
-  const name = req.body.name;
-  const species = req.body.species;
-  const carry = req.body.carry;
-  const weight = req.body.weight;
-  const date_of_birth = req.body.date_of_birth;
 
-  const pet = await Pet.create({
-    TutorId,
-    name,
-    species,
-    carry,
-    weight,
-    date_of_birth,
-  });
+  if (await Tutor.findByPk(TutorId)) {
+    const name = req.body.name;
+    const species = req.body.species;
+    const carry = req.body.carry;
+    const weight = req.body.weight;
+    const date_of_birth = req.body.date_of_birth;
 
-  res.json(pet);
+    const pet = await Pet.create({
+      TutorId,
+      name,
+      species,
+      carry,
+      weight,
+      date_of_birth,
+    });
+    res.json(pet);
+    return;
+  }
+  res.status(400).send("Tutor ID doesn't exist!");
 });
 
 app.put("/pet/:petId/tutor/:tutorId", async (req, res) => {
   const tutorId = req.params.tutorId;
   if (await Tutor.findByPk(tutorId)) {
     const petId = req.params.petId;
-
     const newPet = await Pet.findByPk(petId);
-    newPet.name = req.body.name;
-    newPet.species = req.body.species;
-    newPet.carry = req.body.carry;
-    newPet.weight = req.body.weight;
-    newPet.date_of_birth = req.body.date_of_birth;
 
-    newPet.save();
-    res.json(newPet);
-  } else {
-    res.status(404).send("Tutor Id doesn't exist!");
+    if (newPet) {
+      newPet.name = req.body.name;
+      newPet.species = req.body.species;
+      newPet.carry = req.body.carry;
+      newPet.weight = req.body.weight;
+      newPet.date_of_birth = req.body.date_of_birth;
+      newPet.save();
+      res.json(newPet);
+      return;
+    }
+    res.status(404).send("Pet ID doesn't exist!");
+    return;
   }
+  res.status(404).send("Tutor ID doesn't exist!");
 });
 
 app.delete("/pet/:petId/tutor/:tutorId", async (req, res) => {
@@ -110,11 +129,16 @@ app.delete("/pet/:petId/tutor/:tutorId", async (req, res) => {
   const petId = req.params.petId;
   if (await Tutor.findByPk(tutorId)) {
     const pet = await Pet.findByPk(petId);
-    await pet.destroy();
-    res.sendStatus(204);
-  } else {
-    res.status(404).send("Tutor Id doesn't exist!");
+
+    if (pet) {
+      await pet.destroy();
+      res.sendStatus(204);
+      return;
+    }
+    res.status(404).send("Pet ID doesn't exist!");
+    return;
   }
+  res.status(404).send("Tutor ID doesn't exist!");
 });
 
 connection
