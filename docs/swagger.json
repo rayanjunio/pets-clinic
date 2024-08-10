@@ -1,0 +1,339 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Essa API realiza o controle de pets e seus respectivos tutores, tendo assim o conhecimento de qual pet pertence a um determinado tutor. Um tutor pode ter vários pets, porém um pet pode ter somente um tutor.",
+    "version": "0.0.1",
+    "title": "Pets Clinic",
+    "contact": {
+      "name": "Rayan Junio"
+    }
+  },
+  "host": "localhost:3000",
+  "schemes": [
+    "https"," http"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/tutors": {
+      "get": {
+        "summary": "Lista de tutores",
+        "description": "Este endpoint retorna todos os tutores cadastrados no sistema",
+        "tags": [
+          "Tutores"
+        ],
+        "responses": {
+          "200": {
+            "description": "Uma lista de tutores",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TutorWithPet"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tutor": {
+      "post": {
+        "summary": "Cria um tutor",
+        "description": "Este endpoint cria um novo tutor e o retorna para o usuário",
+        "tags": [
+          "Tutores"
+        ],
+        "parameters": [
+          {
+            "name": "tutor",
+            "in": "body",
+            "description": "Tutor a ser cadastrado na clínica",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tutor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o usuário cadastrado",
+            "schema": {
+              "$ref": "#/definitions/Tutor"
+            }
+          }
+        }
+      }
+    },
+    "/tutor/:id": {
+      "put": {
+        "summary": "Atualiza um tutor",
+        "description": "Este endpoint atualiza um tutor no sistema. O ID do tutor deve ser informado.",
+        "tags": [
+          "Tutores"
+        ],
+        "parameters": [
+          {
+            "name": "tutor",
+            "in": "body",
+            "description": "Tutor",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tutor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o tutor atualizado",
+            "schema": {
+              "$ref": "#/definitions/Tutor"
+            }
+          },
+          "400": {
+            "description": "ID do tutor não existe"
+          }
+        }
+      }
+    },
+    "/tutor/{id}": {
+      "delete": {
+        "summary": "Apagar um tutor",
+        "description": "Este endpoint apaga o tutor no qual é informado o **ID** e retorna o status da requisição.",
+        "tags": [
+          "Tutores"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do tutor",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usuário excluído com sucesso."
+          },
+          "404": {
+            "description": "ID do tutor não existe"
+          }
+        }
+      }
+    },
+    "/pet/:tutorId": {
+      "post": {
+        "summary": "Cria um pet",
+        "description": "Este endpoint cria um novo pet e o retorna para o usuário",
+        "tags": [
+          "Pets"
+        ],
+        "parameters": [
+          {
+            "name": "pet",
+            "in": "body",
+            "description": "Pet a ser cadastrado na clínica",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o pet cadastrado",
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          },
+          "400": {
+            "description": "ID do tutor não existe"
+          }
+        }
+      }
+    },
+    "/pet/:petId/tutor/:tutorId": {
+      "put": {
+        "summary": "Atualiza um pet",
+        "description": "Este endpoint atualiza um pet no sistema. O ID do tutor e do pet devem ser informados.",
+        "tags": [
+          "Pets"
+        ],
+        "parameters": [
+          {
+            "name": "pet",
+            "in": "body",
+            "description": "Pet",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o pet atualizado",
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          },
+          "404": {
+            "description": "ID do tutor ou do pet não existe"
+          }
+        }
+      }
+    },
+    "/pet/{petId}/tutor/{tutorId}": {
+      "delete": {
+        "summary": "Apagar o pet de um tutor",
+        "description": "Este endpoint apaga o pet de um tutor no qual é informado o **ID** e retorna o status da requisição. Devem ser informados o ID do tutor e do pet.",
+        "tags": [
+          "Pets"
+        ],
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "ID do pet",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID do tutor",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Pet excluído com sucesso."
+          },
+          "404": {
+            "description": "ID do tutor ou do pet não existe"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TutorWithPet": {
+      "type": "object",
+      "required": [
+        "name",
+        "phone",
+        "email",
+        "date_of_birth",
+        "zip_code"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "id do tutor"
+        },
+        "name": {
+          "type": "string",
+          "description": "nome do tutor"
+        },
+        "phone": {
+          "type": "string",
+          "description": "telefone para contato do tutor"
+        },
+        "email": {
+          "type": "string",
+          "description": "email para contato do tutor"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date",
+          "description": "data de nascimento do tutor"
+        },
+        "zip_code": {
+          "type": "string",
+          "description": "CEP do tutor"
+        },
+        "pets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Pet"
+          }
+        }
+      }
+    },
+    "Tutor": {
+      "type": "object",
+      "required": [
+        "name",
+        "phone",
+        "email",
+        "date_of_birth",
+        "zip_code"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "id do tutor"
+        },
+        "name": {
+          "type": "string",
+          "description": "nome do tutor"
+        },
+        "phone": {
+          "type": "string",
+          "description": "telefone para contato do tutor"
+        },
+        "email": {
+          "type": "string",
+          "description": "email para contato do tutor"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date",
+          "description": "data de nascimento do tutor"
+        },
+        "zip_code": {
+          "type": "string",
+          "description": "CEP do tutor"
+        }
+      }
+    },
+    "Pet": {
+      "type": "object",
+      "required": [
+        "name",
+        "species",
+        "carry",
+        "weight",
+        "date_of_birth"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "id do pet"
+        },
+        "name": {
+          "type": "string",
+          "description": "nome do pet"
+        },
+        "species": {
+          "type": "string",
+          "description": "espécie do pet"
+        },
+        "carry": {
+          "type": "string",
+          "description": "tamanho do suporte para o pet"
+        },
+        "weight": {
+          "type": "integer",
+          "description": "tamanho do pet"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date",
+          "description": "data de nascimento do pet"
+        }
+      }
+    }
+  }
+}
