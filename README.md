@@ -15,3 +15,16 @@ Um tutor pode ter vários pets, mas um pet possui somente um tutor.
 4- *Antes de executar a aplicação, certifique-se de criar um arquivo chamado **".env"** na pasta raíz  e copie o que está escrito no arquivo **.env.example** para o novo arquivo criado. Em seguida digite seu usuário e sua senha do banco de dados em **".env"**.*
 
 5- *Digite: > **npm run execute** - no terminal para iniciar a aplicação, e esta, estará pronta para receber requisições.*
+
+6- *O host da API é **"localhost"**, e a porta é **"3000"**. Portanto, quando o projeto estiver sendo executado, basta adicionar as rotas desejadas à URL na sua ferramenta de teste. EX: localhost:3000/rota*
+
+## Documentação:
+
+- A documentação da API foi feita utilizando Swagger. Para acessá-la basta a aplicação estar executando, e você deve realizar a requisição da seguinte rota no seu navegador: 
+    **localhost:3000/documentation**
+
+### Dependências Utilizadas:
+    "dotenv": "^10.0.0",
+    "express": "^4.19.2",
+    "mysql2": "^3.11.0",
+    "sequelize": "^6.37.3"
