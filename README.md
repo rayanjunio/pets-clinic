@@ -27,4 +27,5 @@ Um tutor pode ter vários pets, mas um pet possui somente um tutor.
     "dotenv": "^10.0.0",
     "express": "^4.19.2",
     "mysql2": "^3.11.0",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "swagger-ui-express": "^5.0.1"
