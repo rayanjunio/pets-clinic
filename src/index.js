@@ -108,7 +108,7 @@ app.put("/pet/:petId/tutor/:tutorId", async (req, res) => {
     const petId = req.params.petId;
     const newPet = await Pet.findByPk(petId);
 
-    if (newPet) {
+    if (newPet.TutorId == tutorId && newPet) {
       newPet.name = req.body.name;
       newPet.species = req.body.species;
       newPet.carry = req.body.carry;
@@ -118,7 +118,7 @@ app.put("/pet/:petId/tutor/:tutorId", async (req, res) => {
       res.json(newPet);
       return;
     }
-    res.status(404).send("Pet ID doesn't exist!");
+    res.status(404).send("Pet or Tutor ID is incorrect!");
     return;
   }
   res.status(404).send("Tutor ID doesn't exist!");
