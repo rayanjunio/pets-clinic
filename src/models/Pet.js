@@ -4,23 +4,23 @@ const db = require("../db/connection");
 const Pet = db.define("Pet", {
   name: {
     type: DataTypes.STRING,
-    required: true,
+    require: true,
   },
   species: {
     type: DataTypes.STRING,
-    required: true,
+    require: true,
   },
   carry: {
     type: DataTypes.STRING,
-    required: true,
+    require: true,
   },
   weight: {
     type: DataTypes.INTEGER,
-    required: true,
+    require: true,
   },
   date_of_birth: {
     type: DataTypes.DATE,
-    required: true,
+    require: true,
   },
 });
 

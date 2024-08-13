@@ -6,23 +6,23 @@ const Pet = require("./Pet");
 const Tutor = db.define("Tutor", {
   name: {
     type: DataTypes.STRING,
-    required: true,
+    require: true,
   },
   phone: {
     type: DataTypes.STRING,
-    required: true,
+    require: true,
   },
   email: {
     type: DataTypes.STRING,
-    required: true,
+    require: true,
   },
   date_of_birth: {
     type: DataTypes.DATE,
-    required: true,
+    require: true,
   },
   zip_code: {
     type: DataTypes.STRING,
-    required: true,
+    require: true,
   },
 });
 
